@@ -17,7 +17,22 @@ def seed_choices():
         from app.models.user import User, RoleEnum
         from app.services.auth import hash_password
 
-        # Admin already created - see admin setup
+        # Seed admin user if not exists
+        admin_email = "tsiaromiray@gmail.com"
+        existing_admin = db.query(User).filter(User.email == admin_email).first()
+        if not existing_admin:
+            admin = User(
+                nom="Admin",
+                prenoms="Topo",
+                matricule="ADMIN001",
+                email=admin_email,
+                password_hash=hash_password("fandresena"),
+                fonction="Responsable Topo",
+                role=RoleEnum.super_admin.value,
+            )
+            db.add(admin)
+            db.commit()
+
         categories = {
             "Chaussée": ["Entrée en terre", "PST", "CF", "CB", "BBSG", "Autres"],
             "Assainissement": ["Assainissement"],
